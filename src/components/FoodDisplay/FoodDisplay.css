@@ -1,0 +1,38 @@
+
+
+.food-display {
+  margin-top: 30px;
+}
+
+.food-display h2 {
+  font-size: max(2vw, 24px);
+  font-weight: 600;
+}
+
+/* 4 Items per row layout */
+.food-display-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 30px;
+  margin-top: 30px;
+  row-gap: 50px;
+}
+
+/* Responsive view for smaller screens */
+@media (max-width: 1050px) {
+  .food-display-list {
+    grid-template-columns: repeat(3, 1fr); /* 3 items on tablets */
+  }
+}
+
+@media (max-width: 750px) {
+  .food-display-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 items on mobile */
+  }
+}
+
+@media (max-width: 500px) {
+  .food-display-list {
+    grid-template-columns: repeat(1, 1fr); /* 1 item on small phones */
+  }
+}

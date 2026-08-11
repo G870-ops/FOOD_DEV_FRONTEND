@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(255, 99, 71, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(255, 215, 0, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 99, 71, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(238, 130, 238, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #1e293b;
+  font-family: 'Outfit', sans-serif;
+}
+
+.app {
+  width: 80%;
+  margin: auto;
+}
+
+/* Global Micro-Interactions & Transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+/* Cyber-Neon Dark Theme Variables */
+body.dark {
+  background-color: #0b0f19;
+  color: #00ffcc;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 255, 204, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(138, 43, 226, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(0, 255, 204, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(138, 43, 226, 0.05) 0px, transparent 50%);
+}
+
+body.dark .navbar {
+  background-color: #0b0f19;
+  border-bottom: 1px solid #1f293d;
+}
+
+body.dark .navbar-menu li,
+body.dark .navbar-right button {
+  color: #00ffcc;
+  border-color: #00ffcc;
+}
+
+body.dark .navbar-right button:hover {
+  background: rgba(0, 255, 204, 0.1);
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+}
+
+/* Micro-Interactions: Hover scale & haptic visual feedback for cards and buttons */
+button, .food-item, .navbar-menu li {
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.food-item:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+body.dark .food-item:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
+  border: 1px solid #00ffcc;
+}
+
+/* Theme Toggle Button Styling */
+.theme-toggle-icon {
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 99, 71, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle-icon:hover {
+  transform: scale(1.1) rotate(15deg);
+}
