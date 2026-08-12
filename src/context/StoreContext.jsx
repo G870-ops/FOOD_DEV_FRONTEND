@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 export const StoreContext = createContext(null);
@@ -6,7 +6,10 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
-    const url = "http://localhost:4000"; 
+    
+    // Uses environment variable if available, otherwise defaults to live Vercel backend URL
+    const url = import.meta.env?.VITE_BACKEND_URL || "https://food-dev-backend-jz35.vercel.app"; 
+    
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -26,14 +29,14 @@ const StoreContextProvider = (props) => {
         if (token) {
             await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
         }
-    }
+    };
 
     const removeFromCart = async (itemId) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
         if (token) {
             await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
         }
-    }
+    };
 
     const getTotalCartAmount = () => {
         let totalAmount = 0;
@@ -46,9 +49,10 @@ const StoreContextProvider = (props) => {
             }
         }
         return totalAmount;
-    }
+    };
 
-    const fetchFoodList = async () => {
+    // Wrapped with useCallback to maintain stable reference across renders
+    const fetchFoodList = useCallback(async () => {
         try {
             const response = await axios.get(url + "/api/food/list");
             if (response.data.success) {
@@ -59,19 +63,19 @@ const StoreContextProvider = (props) => {
         } catch (error) {
             console.error("Error fetching food list from backend:", error);
         }
-    };
+    }, [url]);
 
-    // Fetch cart data from database
-    const loadCartData = async (token) => {
+    // Wrapped with useCallback to maintain stable reference across renders
+    const loadCartData = useCallback(async (tokenParam) => {
         try {
-            const response = await axios.post(url + "/api/cart/get", {}, { headers: { token } });
+            const response = await axios.post(url + "/api/cart/get", {}, { headers: { token: tokenParam } });
             if (response.data.success) {
                 setCartItems(response.data.cartData);
             }
         } catch (error) {
             console.error("Error loading cart data:", error);
         }
-    };
+    }, [url]);
 
     // Sync cart data on initial load
     useEffect(() => {
@@ -84,7 +88,7 @@ const StoreContextProvider = (props) => {
             }
         }
         loadData();
-    }, []);
+    }, [fetchFoodList, loadCartData]);
 
     const contextValue = {
         food_list,
@@ -98,7 +102,7 @@ const StoreContextProvider = (props) => {
         setToken,
         theme,
         toggleTheme
-    }
+    };
 
     return (
         <StoreContext.Provider value={contextValue}>
