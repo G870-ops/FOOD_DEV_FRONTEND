@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import './FoodItem.css';
-import { assets } from '../../assets/assets';
+import { assets, food_list } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
 const FoodItem = ({ id, name, price, description, image }) => {
@@ -13,10 +13,39 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
+  // Helper function to resolve local static assets vs backend uploaded images
+  const getFoodImage = (img) => {
+    if (!img) return assets.header_img;
+
+    // Check if the image prop is already a bundled asset path / blob
+    if (img.startsWith("data:") || img.startsWith("http://") || img.startsWith("https://") || img.startsWith("/assets/")) {
+      return img;
+    }
+
+    // Try matching the string filename (e.g., "food_1.png") with frontend assets.js static data
+    const localMatch = food_list.find((item) => item.image && item.image.includes(img));
+    if (localMatch) {
+      return localMatch.image;
+    }
+
+    // Fallback for custom images uploaded via Admin panel backend
+    return `${url}/images/${img}`;
+  };
+
+  const currentImageSrc = getFoodImage(image);
+
   return (
     <div className='food-item'>
       <div className="food-item-img-container">
-        <img className='food-item-image' src={url + "/images/" + image} alt={name} />
+        <img 
+          className='food-item-image' 
+          src={currentImageSrc} 
+          alt={name} 
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = assets.header_img;
+          }}
+        />
         
         {/* Interactive 3D Preview Button Badge */}
         <button 
@@ -30,7 +59,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
         {isRotating3D && (
           <div className="interactive-3d-viewer">
             <div className="rotating-dish-model">
-              <img src={url + "/images/" + image} alt="3D preview" className="ring-spin" />
+              <img src={currentImageSrc} alt="3D preview" className="ring-spin" />
               <p></p>
             </div>
           </div>
@@ -65,7 +94,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           onClick={() => setShowInr(!showInr)}
           title="Click to switch between USD and INR"
         >
-          {showInr ? `₹${price * USD_TO_INR}` : `$${price}`}
+          {showInr ? `₹${(price * USD_TO_INR).toFixed(2)}` : `$${price}`}
         </p>
       </div>
     </div>
