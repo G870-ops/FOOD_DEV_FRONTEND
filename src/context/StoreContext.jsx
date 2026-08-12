@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
 export const StoreContext = createContext(null);
@@ -6,7 +6,7 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
-    const url = import.meta.env?.VITE_BACKEND_URL || "https://food-dev-backend-jz35.vercel.app";
+    const url = "https://food-dev-backend-jz35.vercel.app";
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -48,8 +48,7 @@ const StoreContextProvider = (props) => {
         return totalAmount;
     }
 
-    // Wrapped with useCallback to memoize function reference
-    const fetchFoodList = useCallback(async () => {
+    const fetchFoodList = async () => {
         try {
             const response = await axios.get(url + "/api/food/list");
             if (response.data.success) {
@@ -60,19 +59,19 @@ const StoreContextProvider = (props) => {
         } catch (error) {
             console.error("Error fetching food list from backend:", error);
         }
-    }, [url]);
+    };
 
-    // Fetch cart data from database (wrapped with useCallback)
-    const loadCartData = useCallback(async (tokenParam) => {
+    // Fetch cart data from database
+    const loadCartData = async (token) => {
         try {
-            const response = await axios.post(url + "/api/cart/get", {}, { headers: { token: tokenParam } });
+            const response = await axios.post(url + "/api/cart/get", {}, { headers: { token } });
             if (response.data.success) {
                 setCartItems(response.data.cartData);
             }
         } catch (error) {
             console.error("Error loading cart data:", error);
         }
-    }, [url]);
+    };
 
     // Sync cart data on initial load
     useEffect(() => {
@@ -85,7 +84,7 @@ const StoreContextProvider = (props) => {
             }
         }
         loadData();
-    }, [fetchFoodList, loadCartData]);
+    }, []);
 
     const contextValue = {
         food_list,
