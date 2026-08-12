@@ -13,10 +13,28 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
+  // Determine correct image URL logic with fallbacks
+  const getImageUrl = (imgName) => {
+    if (!imgName) return assets.header_img; // fallback asset
+    if (imgName.startsWith("http://") || imgName.startsWith("https://")) {
+      return imgName;
+    }
+    return `${url}/images/${imgName}`;
+  };
+
   return (
     <div className='food-item'>
       <div className="food-item-img-container">
-        <img className='food-item-image' src={url + "/images/" + image} alt={name} />
+        <img 
+          className='food-item-image' 
+          src={getImageUrl(image)} 
+          alt={name} 
+          onError={(e) => {
+            // Fallback image if backend image URL fails to load
+            e.target.onerror = null; 
+            e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+          }}
+        />
         
         {/* Interactive 3D Preview Button Badge */}
         <button 
@@ -30,7 +48,15 @@ const FoodItem = ({ id, name, price, description, image }) => {
         {isRotating3D && (
           <div className="interactive-3d-viewer">
             <div className="rotating-dish-model">
-              <img src={url + "/images/" + image} alt="3D preview" className="ring-spin" />
+              <img 
+                src={getImageUrl(image)} 
+                alt="3D preview" 
+                className="ring-spin" 
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+                }}
+              />
               <p></p>
             </div>
           </div>
@@ -65,7 +91,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           onClick={() => setShowInr(!showInr)}
           title="Click to switch between USD and INR"
         >
-          {showInr ? `₹${price * USD_TO_INR}` : `$${price}`}
+          {showInr ? `₹${(price * USD_TO_INR).toFixed(2)}` : `$${price}`}
         </p>
       </div>
     </div>
