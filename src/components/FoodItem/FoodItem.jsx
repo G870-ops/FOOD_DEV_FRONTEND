@@ -13,26 +13,30 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
-  // Helper function to resolve local static assets vs backend uploaded images
-  const getFoodImage = (img) => {
-    if (!img) return assets.header_img;
+  // Resolution logic strictly targeting the 32 food assets or uploaded backend image
+  const getFoodImage = () => {
+    // 1. Direct ID match from local assets list (1-32)
+    const matchedById = food_list.find((item) => String(item._id) === String(id));
+    if (matchedById) return matchedById.image;
 
-    // Check if the image prop is already a bundled asset path / blob
-    if (img.startsWith("data:") || img.startsWith("http://") || img.startsWith("https://") || img.startsWith("/assets/")) {
-      return img;
+    // 2. Direct string filename match (e.g. "food_1.png")
+    if (typeof image === 'string') {
+      const matchedByName = food_list.find(
+        (item) => typeof item.image === 'string' && item.image.includes(image)
+      );
+      if (matchedByName) return matchedByName.image;
+
+      // 3. Absolute URL or blob link
+      if (image.startsWith("data:") || image.startsWith("http://") || image.startsWith("https://")) {
+        return image;
+      }
     }
 
-    // Try matching the string filename (e.g., "food_1.png") with frontend assets.js static data
-    const localMatch = food_list.find((item) => item.image && item.image.includes(img));
-    if (localMatch) {
-      return localMatch.image;
-    }
-
-    // Fallback for custom images uploaded via Admin panel backend
-    return `${url}/images/${img}`;
+    // 4. Fallback to backend server image upload path
+    return `${url}/images/${image}`;
   };
 
-  const currentImageSrc = getFoodImage(image);
+  const currentImageSrc = getFoodImage();
 
   return (
     <div className='food-item'>
@@ -41,10 +45,6 @@ const FoodItem = ({ id, name, price, description, image }) => {
           className='food-item-image' 
           src={currentImageSrc} 
           alt={name} 
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = assets.header_img;
-          }}
         />
         
         {/* Interactive 3D Preview Button Badge */}
@@ -60,7 +60,6 @@ const FoodItem = ({ id, name, price, description, image }) => {
           <div className="interactive-3d-viewer">
             <div className="rotating-dish-model">
               <img src={currentImageSrc} alt="3D preview" className="ring-spin" />
-              <p></p>
             </div>
           </div>
         )}
