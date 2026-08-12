@@ -6,10 +6,7 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
-    
-    // Uses environment variable if available, otherwise defaults to live Vercel backend URL
-    const url = import.meta.env?.VITE_BACKEND_URL || "https://food-dev-backend-jz35.vercel.app"; 
-    
+    const url = import.meta.env?.VITE_BACKEND_URL || "https://food-dev-backend-jz35.vercel.app";
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -29,14 +26,14 @@ const StoreContextProvider = (props) => {
         if (token) {
             await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
         }
-    };
+    }
 
     const removeFromCart = async (itemId) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
         if (token) {
             await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
         }
-    };
+    }
 
     const getTotalCartAmount = () => {
         let totalAmount = 0;
@@ -49,9 +46,9 @@ const StoreContextProvider = (props) => {
             }
         }
         return totalAmount;
-    };
+    }
 
-    // Wrapped with useCallback to maintain stable reference across renders
+    // Wrapped with useCallback to memoize function reference
     const fetchFoodList = useCallback(async () => {
         try {
             const response = await axios.get(url + "/api/food/list");
@@ -65,7 +62,7 @@ const StoreContextProvider = (props) => {
         }
     }, [url]);
 
-    // Wrapped with useCallback to maintain stable reference across renders
+    // Fetch cart data from database (wrapped with useCallback)
     const loadCartData = useCallback(async (tokenParam) => {
         try {
             const response = await axios.post(url + "/api/cart/get", {}, { headers: { token: tokenParam } });
@@ -102,7 +99,7 @@ const StoreContextProvider = (props) => {
         setToken,
         theme,
         toggleTheme
-    };
+    }
 
     return (
         <StoreContext.Provider value={contextValue}>
