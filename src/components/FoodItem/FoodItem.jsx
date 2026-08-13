@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import './FoodItem.css';
-import { assets, food_list } from '../../assets/assets';
+import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
 const FoodItem = ({ id, name, price, description, image }) => {
@@ -13,39 +13,10 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
-  // Resolution logic strictly targeting the 32 food assets or uploaded backend image
-  const getFoodImage = () => {
-    // 1. Direct ID match from local assets list (1-32)
-    const matchedById = food_list.find((item) => String(item._id) === String(id));
-    if (matchedById) return matchedById.image;
-
-    // 2. Direct string filename match (e.g. "food_1.png")
-    if (typeof image === 'string') {
-      const matchedByName = food_list.find(
-        (item) => typeof item.image === 'string' && item.image.includes(image)
-      );
-      if (matchedByName) return matchedByName.image;
-
-      // 3. Absolute URL or blob link
-      if (image.startsWith("data:") || image.startsWith("http://") || image.startsWith("https://")) {
-        return image;
-      }
-    }
-
-    // 4. Fallback to backend server image upload path
-    return `${url}/images/${image}`;
-  };
-
-  const currentImageSrc = getFoodImage();
-
   return (
     <div className='food-item'>
       <div className="food-item-img-container">
-        <img 
-          className='food-item-image' 
-          src={currentImageSrc} 
-          alt={name} 
-        />
+        <img className='food-item-image' src={url + "/images/" + image} alt={name} />
         
         {/* Interactive 3D Preview Button Badge */}
         <button 
@@ -59,7 +30,8 @@ const FoodItem = ({ id, name, price, description, image }) => {
         {isRotating3D && (
           <div className="interactive-3d-viewer">
             <div className="rotating-dish-model">
-              <img src={currentImageSrc} alt="3D preview" className="ring-spin" />
+              <img src={url + "/images/" + image} alt="3D preview" className="ring-spin" />
+              <p>Interactive 360° Holographic Preview</p>
             </div>
           </div>
         )}
@@ -93,7 +65,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           onClick={() => setShowInr(!showInr)}
           title="Click to switch between USD and INR"
         >
-          {showInr ? `₹${(price * USD_TO_INR).toFixed(2)}` : `$${price}`}
+          {showInr ? `₹${price * USD_TO_INR}` : `$${price}`}
         </p>
       </div>
     </div>
