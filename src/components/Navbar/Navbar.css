@@ -3,10 +3,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .navbar .logo {
     width: 150px;
+    transition: width 0.3s ease;
 }
 
 .navbar-menu {
@@ -31,12 +33,13 @@
     padding: 10px 30px;
     border-radius: 50px;
     cursor: pointer;
+    white-space: nowrap;
+    transition: 0.3s ease-in-out;
 }
 
 .navbar button:hover {
     background: tomato;
     color: white;
-    transition: 0.3s ease-in-out;
 }
 
 .navbar .active {
@@ -50,6 +53,8 @@
 
 .navbar-search-icon {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-search-icon .dot {
@@ -57,14 +62,16 @@
     min-width: 10px;
     min-height: 10px;
     background-color: tomato;
-    border-radius: 5px;
-    top: -8px;
-    right: -8px;
+    border-radius: 50%;
+    top: -6px;
+    right: -6px;
 }
 
 /* ==================== Profile Dropdown Styles ==================== */
 .navbar-profile {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-profile img {
@@ -75,7 +82,8 @@
     position: absolute;
     display: none;
     right: 0;
-    z-index: 1;
+    top: 100%;
+    z-index: 10;
 }
 
 .navbar-profile:hover .nav-profile-dropdown {
@@ -83,11 +91,12 @@
     flex-direction: column;
     gap: 10px;
     background-color: #fff2ef;
-    padding: 12px 25px;
-    border-radius: 4px;
+    padding: 12px 20px;
+    border-radius: 8px;
     border: 1px solid tomato;
     outline: 2px solid white;
     list-style: none;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .nav-profile-dropdown li {
@@ -95,6 +104,7 @@
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .nav-profile-dropdown img {
@@ -133,7 +143,7 @@
 
 @media (max-width: 900px) {
     .navbar .logo {
-        width: 140px;
+        width: 130px;
     }
     .navbar-menu {
         display: none;
@@ -156,7 +166,7 @@
     }
 
     .navbar .logo {
-        width: 100px;
+        width: 110px;
     }
 
     .navbar-menu {
@@ -164,7 +174,7 @@
     }
 
     .navbar-right {
-        gap: 12px;
+        gap: 14px;
     }
 
     .navbar-right img {
@@ -173,20 +183,44 @@
 
     .navbar button {
         padding: 6px 14px;
-        font-size: 11px;
+        font-size: 12px;
+    }
+}
+
+/* Specific Mobile Optimization for Small Android Screens (<= 480px) */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 0px;
     }
 
-    .navbar-search-icon {
-        position: relative;
+    .navbar .logo {
+        width: 100px; /* Scaled down brand logo */
+    }
+
+    .navbar-right {
+        gap: 10px; /* Reduced gap to fit search, theme, basket, and profile icons */
+    }
+
+    .navbar-right img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+    }
+
+    .navbar button {
+        padding: 5px 10px;
+        font-size: 10px;
+        border-radius: 30px;
     }
 
     .navbar-search-icon .dot {
-        position: absolute;
-        min-width: 10px;
-        min-height: 10px;
-        background-color: tomato;
-        border-radius: 5px;
-        top: -8px;
-        right: -8px;
+        min-width: 7px;
+        min-height: 7px;
+        top: -4px;
+        right: -4px;
+    }
+
+    .nav-profile-dropdown {
+        right: -10px; /* Aligns dropdown within viewport bounds */
     }
 }

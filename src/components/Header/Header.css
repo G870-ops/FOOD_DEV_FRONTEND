@@ -1,58 +1,65 @@
 .header {
-    height: 34vw;
-    margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
-    background-size: contain;
-    position: relative;
+  height: 34vw;
+  margin: 30px auto;
+  background: url('/header_img.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .header-contents {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 1.5vw;
-    max-width: 50%;
-    bottom: 10%;
-    left: 6vw;
-    animation: fadeIn 3s;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2vw;
+  max-width: 50%;
+  bottom: 10%;
+  left: 6vw;
+  animation: fadeIn 1.5s ease-in-out;
 }
 
 .header-contents h2 {
-    font-weight: 500;
-    color: white;
-    font-size: max(4.5vw, 22px);
+  font-weight: 600;
+  color: white;
+  font-size: clamp(16px, 4.5vw, 42px); /* Dynamically scales between desktop and mobile */
+  line-height: 1.15;
 }
 
 .header-contents p {
-    color: white;
-    font-size: 1vw;
+  color: white;
+  font-size: clamp(10px, 1.1vw, 16px);
+  line-height: 1.4;
 }
 
 .header-contents button {
-    border: none;
-    color: #747474;
-    font-weight: 500;
-    padding: 1vw 2.3vw;
-    background-color: white;
-    font-size: max(1vw, 13px);
-    border-radius: 50px;
-    
+  border: none;
+  color: #494949;
+  font-weight: 500;
+  padding: 1vw 2.3vw;
+  background-color: white;
+  font-size: clamp(11px, 1.2vw, 16px);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-@media (max-width:1050px){
-    
-    
-    .header-contents{
-        max-width: 45%;
-    }
+.header-contents button:active {
+  transform: scale(0.95);
+}
 
+/* ==================== Responsive Breakpoints ==================== */
+
+@media (max-width: 1050px) {
+  .header-contents {
+    max-width: 45%;
+  }
 }
 
 @media (max-width: 750px) {
   .header {
-    height: 44vw;
-    border-radius: 12px;  /* 👈 Why: Gives the hero image curved corners matching the reference layout */
+    height: 42vw;
     margin: 15px auto;
   }
 
@@ -60,25 +67,49 @@
     max-width: 55%;
     bottom: 12%;
     left: 4vw;
-    gap: 1.8vw;
-  }
-
-  .header-contents h2 {
-    font-size: max(3.5vw, 13px);
-    line-height: 1.15;
-    font-weight: 600;
+    gap: 1.5vw;
   }
 
   .header-contents p {
-    display: none; /* 👈 Why: Standard mobile layout hides the long paragraph to fit the image */
+    display: none; /* Hides description paragraph to conserve visual space on mobile */
   }
 
   .header-contents button {
-    padding: 1.2vw 2.5vw;
-    font-size: max(1.5vw, 9px);
-    border-radius: 50px;
-    background-color: white;
-    color: #494949;
-    font-weight: 500;
+    padding: 1.2vw 2.8vw;
+  }
+}
+
+/* Specific Optimization for Android Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  .header {
+    height: 48vw; /* Increases height ratio so content sits comfortably on small screens */
+    border-radius: 12px;
+  }
+
+  .header-contents {
+    max-width: 68%; /* Expands width bounds so text won't wrap into tiny words */
+    bottom: 10%;
+    left: 4vw;
+    gap: 8px;
+  }
+
+  .header-contents h2 {
+    font-size: clamp(14px, 4.2vw, 20px); /* Prevents header text from getting cut off */
+  }
+
+  .header-contents button {
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
