@@ -1,56 +1,38 @@
+
+
 .food-display {
   margin-top: 30px;
 }
 
 .food-display h2 {
-  font-size: clamp(20px, 2.2vw, 28px);
+  font-size: max(2vw, 24px);
   font-weight: 600;
-  color: #262626;
-  margin-bottom: 20px;
 }
 
-/* 4 Items per row layout on desktop */
+/* 4 Items per row layout */
 .food-display-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr); 
   gap: 30px;
-  row-gap: 50px;
   margin-top: 30px;
+  row-gap: 50px;
 }
 
-/* ==================== Media Queries ==================== */
-
-/* Tablet Layout (3 columns) */
+/* Responsive view for smaller screens */
 @media (max-width: 1050px) {
   .food-display-list {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    row-gap: 40px;
+    grid-template-columns: repeat(3, 1fr); /* 3 items on tablets */
   }
 }
 
-/* Medium Mobile / Foldables (2 columns) */
 @media (max-width: 750px) {
   .food-display-list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    row-gap: 30px;
+    grid-template-columns: repeat(2, 1fr); /* 2 items on mobile */
   }
 }
 
-/* Android Mobile Viewports (2 compact columns) */
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .food-display-list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    row-gap: 24px;
-  }
-}
-
-/* Extra small devices (320px width) - optional single column fallback */
-@media (max-width: 340px) {
-  .food-display-list {
-    grid-template-columns: 1fr;
-    gap: 15px;
+    grid-template-columns: repeat(1, 1fr); /* 1 item on small phones */
   }
 }
