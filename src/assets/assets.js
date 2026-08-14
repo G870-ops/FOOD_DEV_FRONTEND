@@ -69,6 +69,10 @@ export const assets = {
     add_icon_green,
     add_icon_white,
     remove_icon_red,
+    food_1, food_2, food_3, food_4, food_5, food_6, food_7, food_8,
+    food_9, food_10, food_11, food_12, food_13, food_14, food_15, food_16,
+    food_17, food_18, food_19, food_20, food_21, food_22, food_23, food_24,
+    food_25, food_26, food_27, food_28, food_29, food_30, food_31, food_32 ,
     app_store,
     play_store,
     linkedin_icon,
@@ -81,41 +85,7 @@ export const assets = {
     bag_icon,
     parcel_icon,
 
-
-    
-    food_1,
-    food_2,
-    food_3,
-    food_4,
-    food_5,
-    food_6,
-    food_7,
-    food_8,
-    food_9,
-    food_10,
-    food_11,
-    food_12,
-    food_13,
-    food_14,
-    food_15,
-    food_16,
-    food_17,
-    food_18,
-    food_19,
-    food_20,
-    food_21,
-    food_22,
-    food_23,
-    food_24,
-    food_25,
-    food_26,
-    food_27,
-    food_28,
-    food_29,
-    food_30,
-    food_31,
-    food_32
-}
+};
 
 export const menu_list = [
     {
