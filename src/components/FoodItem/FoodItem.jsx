@@ -13,41 +13,14 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
-  // Determine correct image URL logic with comprehensive fallbacks
-const getImageUrl = (imgName) => {
-  // 1. Fallback if no image prop provided
-  if (!imgName) return assets.header_img;
-
-  // 2. If imgName is an object or non-string asset import
-  if (typeof imgName !== 'string') {
-    return imgName;
-  }
-
-  // 3. If image is an external absolute URL or a bundler-resolved local path (e.g. static asset)
-  if (
-    imgName.startsWith("http://") || 
-    imgName.startsWith("https://") || 
-    imgName.startsWith("data:") ||
-    imgName.startsWith("/assets/") ||
-    imgName.startsWith("/static/")
-  ) {
-    return imgName;
-  }
-
-  // 4. Clean extension for local object keys (e.g., "food_1.png" -> "food_1")
-  const cleanKey = imgName.replace(/\.[^/.]+$/, "");
-
-  // 5. If matching key exists in exported assets mapping
-  if (assets[imgName]) return assets[imgName];
-  if (assets[cleanKey]) return assets[cleanKey];
-
-  // 6. If it's a raw backend upload filename (e.g., "171000000-food.png")
-  if (url) {
+  // Determine correct image URL logic with fallbacks
+  const getImageUrl = (imgName) => {
+    if (!imgName) return assets.header_img; // fallback asset
+    if (imgName.startsWith("http://") || imgName.startsWith("https://")) {
+      return imgName;
+    }
     return `${url}/images/${imgName}`;
-  }
-
-  return assets.header_img;
-};
+  };
 
   return (
     <div className='food-item'>
@@ -57,9 +30,9 @@ const getImageUrl = (imgName) => {
           src={getImageUrl(image)} 
           alt={name} 
           onError={(e) => {
-            // Fallback image if both primary and secondary image URLs fail
+            // Fallback image if backend image URL fails to load
             e.target.onerror = null; 
-            e.target.src = "https://placehold.co/300x200?text=Food+Image";
+            e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
           }}
         />
         
@@ -81,7 +54,7 @@ const getImageUrl = (imgName) => {
                 className="ring-spin" 
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://placehold.co/300x200?text=Food+Image";
+                  e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
                 }}
               />
               <p></p>
