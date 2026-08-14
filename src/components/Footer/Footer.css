@@ -28,7 +28,6 @@
 
 .footer-content-left p {
   line-height: 1.5;
-  font-size: 14px;
 }
 
 .footer-social-icons {
@@ -39,17 +38,11 @@
 .footer-social-icons img {
   width: 40px;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.footer-social-icons img:hover {
-  transform: scale(1.1);
 }
 
 .footer-content-center h2,
 .footer-content-right h2 {
   color: white;
-  font-size: 20px;
 }
 
 .footer-content-center ul,
@@ -63,13 +56,6 @@
 .footer-content-right li {
   margin-bottom: 10px;
   cursor: pointer;
-  font-size: 14px;
-  transition: color 0.2s ease;
-}
-
-.footer-content-center li:hover,
-.footer-content-right li:hover {
-  color: tomato;
 }
 
 .footer hr {
@@ -85,60 +71,10 @@
   font-size: 14px;
 }
 
-/* ==================== Responsive Breakpoints ==================== */
-
-@media (max-width: 1050px) {
-  .footer-content {
-    gap: 40px;
-  }
-}
-
 @media (max-width: 750px) {
-  .footer {
-    padding-top: 50px;
-    margin-top: 60px;
-    padding-left: 5vw;
-    padding-right: 5vw;
-  }
-
   .footer-content {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    text-align: left;
-  }
-
-  .footer-content-left,
-  .footer-content-center,
-  .footer-content-right {
-    gap: 12px;
-  }
-
-  .footer-social-icons img {
-    width: 32px; /* Slightly scaled down social icons for mobile */
-  }
-}
-
-/* Specific Android Mobile Optimization (<= 480px) */
-@media (max-width: 480px) {
-  .footer {
-    padding-top: 40px;
-    margin-top: 40px;
-  }
-
-  .footer-content-center h2,
-  .footer-content-right h2 {
-    font-size: 18px;
-  }
-
-  .footer-content-left p,
-  .footer-content-center li,
-  .footer-content-right li,
-  .footer-copyright {
-    font-size: 13px;
-  }
-
-  .footer hr {
-    margin: 15px 0;
+    gap: 35px;
   }
 }
