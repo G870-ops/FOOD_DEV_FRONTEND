@@ -1,9 +1,13 @@
 .header {
     height: 34vw;
     margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
-    background-size: contain;
+    /* Sets image to no-repeat and centers it horizontally at the top */
+    background: url('/header_img.png') no-repeat top center;
+    background-size: cover; /* Use 'cover' to fill or 'contain' to fit without cropping */
     position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+}
 }
 
 .header-contents {
