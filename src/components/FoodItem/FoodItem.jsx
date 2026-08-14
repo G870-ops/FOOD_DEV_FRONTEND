@@ -13,12 +13,29 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
-  // Determine correct image URL logic with fallbacks
+  // Determine correct image URL logic with comprehensive fallbacks
   const getImageUrl = (imgName) => {
-    if (!imgName) return assets.header_img; // fallback asset
+    // 1. Fallback if no image prop provided
+    if (!imgName) return assets.header_img;
+
+    // 2. If imgName is ALREADY a local imported asset module/object or path
+    if (typeof imgName !== 'string') {
+      return imgName;
+    }
+
+    // 3. If image is an external URL (e.g., Cloudinary, S3, http/https)
     if (imgName.startsWith("http://") || imgName.startsWith("https://")) {
       return imgName;
     }
+
+    // 4. Clean extension if checking keys (e.g., "food_1.png" -> "food_1")
+    const cleanKey = imgName.replace(/\.[^/.]+$/, "");
+
+    // 5. If matching key exists in exported assets object
+    if (assets[imgName]) return assets[imgName];
+    if (assets[cleanKey]) return assets[cleanKey];
+
+    // 6. Express Backend static file URL
     return `${url}/images/${imgName}`;
   };
 
@@ -30,9 +47,9 @@ const FoodItem = ({ id, name, price, description, image }) => {
           src={getImageUrl(image)} 
           alt={name} 
           onError={(e) => {
-            // Fallback image if backend image URL fails to load
+            // Fallback image if both primary and secondary image URLs fail
             e.target.onerror = null; 
-            e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+            e.target.src = "https://placehold.co/300x200?text=Food+Image";
           }}
         />
         
@@ -54,7 +71,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
                 className="ring-spin" 
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+                  e.target.src = "https://placehold.co/300x200?text=Food+Image";
                 }}
               />
               <p></p>
