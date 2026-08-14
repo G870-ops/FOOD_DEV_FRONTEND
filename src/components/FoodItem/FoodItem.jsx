@@ -15,7 +15,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
 
   // Determine correct image URL logic with fallbacks
   const getImageUrl = (imgName) => {
-    if (!imgName) return ; // fallback asset
+    if (!imgName) return assets.header_img; // fallback asset
     if (imgName.startsWith("http://") || imgName.startsWith("https://")) {
       return imgName;
     }
