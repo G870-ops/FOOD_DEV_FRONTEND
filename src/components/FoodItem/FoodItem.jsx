@@ -13,22 +13,43 @@ const FoodItem = ({ id, name, price, description, image }) => {
   // State for 3D inspection modal/tilt
   const [isRotating3D, setIsRotating3D] = useState(false);
 
-  // Determine correct image URL logic with fallbacks
+  // Extract food number from filename like "1786731199796food_21.png" → 21
+  const getFoodIndexFromFilename = (imgName) => {
+    if (!imgName) return null;
+    const match = imgName.match(/food_(\d+)\.png/i);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  // Get static local fallback image using the food index encoded in the filename
+  const getFallbackImage = (imgName) => {
+    const idx = getFoodIndexFromFilename(imgName);
+    if (idx !== null && idx >= 1 && idx <= food_list.length) {
+      return food_list[idx - 1].image;
+    }
+    // Last-resort: fuzzy name match (trim + normalize whitespace)
+    const normName = name.trim().replace(/\s+/g, ' ').toLowerCase();
+    const staticItem = food_list.find(
+      (item) => item.name.trim().replace(/\s+/g, ' ').toLowerCase() === normName
+    );
+    return staticItem ? staticItem.image : assets.header_img;
+  };
+
+  // Build the image src — always use the static local asset directly
+  // since Vercel does not persist uploaded files and all /images/ requests 404.
   const getImageUrl = (imgName) => {
-    if (!imgName) return assets.header_img; // fallback asset
-    if (imgName.startsWith("http://") || imgName.startsWith("https://")) {
+    if (!imgName) return getFallbackImage(imgName);
+    // If it's already an absolute URL (not a Vercel backend image path), use it
+    if (imgName.startsWith('http://') || imgName.startsWith('https://')) {
       return imgName;
     }
+    // imgName is a filename like "1786731199796food_21.png"
+    // Try to resolve via static assets first (avoids Vercel 404 entirely)
+    const staticImg = getFallbackImage(imgName);
+    if (staticImg) return staticImg;
+    // Fallback to backend URL (for locally-running backend)
     return `${url}/images/${imgName}`;
   };
 
-  // Find matching static food item from local assets as a correct fallback
-  const getFallbackImage = () => {
-    const staticItem = food_list.find(
-      (item) => item.name.toLowerCase() === name.toLowerCase()
-    );
-    return staticItem ? staticItem.image : (assets.header_img || "https://placehold.co/300x200?text=Food+Image");
-  };
 
   return (
     <div className='food-item'>
@@ -40,7 +61,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           onError={(e) => {
             // Fallback image if backend image URL fails to load
             e.target.onerror = null; 
-            e.target.src = getFallbackImage();
+            e.target.src = getFallbackImage(image);
           }}
         />
         
@@ -62,7 +83,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
                 className="ring-spin" 
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = getFallbackImage();
+                  e.target.src = getFallbackImage(image);
                 }}
               />
               <p></p>
