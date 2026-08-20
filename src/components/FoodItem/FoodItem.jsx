@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import './FoodItem.css';
-import { assets } from '../../assets/assets';
+import { assets, food_list } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 
 const FoodItem = ({ id, name, price, description, image }) => {
@@ -22,6 +22,14 @@ const FoodItem = ({ id, name, price, description, image }) => {
     return `${url}/images/${imgName}`;
   };
 
+  // Find matching static food item from local assets as a correct fallback
+  const getFallbackImage = () => {
+    const staticItem = food_list.find(
+      (item) => item.name.toLowerCase() === name.toLowerCase()
+    );
+    return staticItem ? staticItem.image : (assets.header_img || "https://placehold.co/300x200?text=Food+Image");
+  };
+
   return (
     <div className='food-item'>
       <div className="food-item-img-container">
@@ -32,7 +40,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           onError={(e) => {
             // Fallback image if backend image URL fails to load
             e.target.onerror = null; 
-            e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+            e.target.src = getFallbackImage();
           }}
         />
         
@@ -54,7 +62,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
                 className="ring-spin" 
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = assets.header_img || "https://placehold.co/300x200?text=Food+Image";
+                  e.target.src = getFallbackImage();
                 }}
               />
               <p></p>
