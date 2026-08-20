@@ -2,10 +2,28 @@ import { useContext } from 'react'
 import './Cart.css'
 import { StoreContext } from '../../context/StoreContext'
 import { useNavigate } from 'react-router-dom';
+import { food_list as staticFoodList } from '../../assets/assets';
 
 const Cart = () => {
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, url } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  // Resolve the correct image for a food item:
+  // The uploaded filename encodes the food index, e.g. "1786731199796food_21.png" → food_21
+  // This avoids all Vercel /images/ 404s.
+  const getFoodImage = (item) => {
+    const imgName = item.image || '';
+    if (imgName.startsWith('http://') || imgName.startsWith('https://')) return imgName;
+    const match = imgName.match(/food_(\d+)\.png/i);
+    if (match) {
+      const idx = parseInt(match[1], 10);
+      if (idx >= 1 && idx <= staticFoodList.length) return staticFoodList[idx - 1].image;
+    }
+    // Fuzzy name fallback
+    const norm = (s) => s.trim().replace(/\s+/g, ' ').toLowerCase();
+    const found = staticFoodList.find((s) => norm(s.name) === norm(item.name));
+    return found ? found.image : `${url}/images/${imgName}`;
+  };
 
   const getSubtotal = () => {
     if (typeof getTotalCartAmount === 'function') {
@@ -49,7 +67,7 @@ const Cart = () => {
             return (
               <div key={item._id || index}>
                 <div className='cart-items-title cart-items-item'>
-                  <img src={url + "/images/" + item.image} alt="" />
+                  <img src={getFoodImage(item)} alt={item.name} />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
                   <p>{cartItems[item._id]}</p>
